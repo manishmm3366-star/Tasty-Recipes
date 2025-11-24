@@ -118,8 +118,57 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="recipe-image">Image URL</label>
-                        <input type="text" id="recipe-image" class="form-control" placeholder="Paste image URL here" required>
+                        <label for="recipe-image">Recipe Image</label>
+                        <div class="image-upload-options">
+                            <div class="upload-option active" data-option="url">
+                                <i class="fas fa-link"></i>
+                                <span>Image URL</span>
+                            </div>
+                            <div class="upload-option" data-option="upload">
+                                <i class="fas fa-upload"></i>
+                                <span>Upload Image</span>
+                            </div>
+                            <div class="upload-option" data-option="camera">
+                                <i class="fas fa-camera"></i>
+                                <span>Take Photo</span>
+                            </div>
+                        </div>
+                        
+                        <div class="image-input-container">
+                            <!-- URL Input -->
+                            <div class="image-input url-input active">
+                                <input type="text" id="recipe-image-url" class="form-control" placeholder="Paste image URL here">
+                            </div>
+                            
+                            <!-- File Upload -->
+                            <div class="image-input upload-input">
+                                <input type="file" id="recipe-image-upload" class="form-control" accept="image/*">
+                                <div class="upload-preview" id="upload-preview">
+                                    <i class="fas fa-image"></i>
+                                    <p>No image selected</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Camera -->
+                            <div class="image-input camera-input">
+                                <button type="button" id="start-camera" class="btn btn-secondary">
+                                    <i class="fas fa-camera"></i> Start Camera
+                                </button>
+                                <div class="camera-container" id="camera-container">
+                                    <video id="camera-preview" autoplay playsinline></video>
+                                    <canvas id="camera-capture" style="display: none;"></canvas>
+                                    <button type="button" id="capture-photo" class="btn" style="display: none;">
+                                        <i class="fas fa-camera"></i> Capture Photo
+                                    </button>
+                                    <div class="camera-preview" id="camera-preview-result" style="display: none;">
+                                        <img id="captured-image" src="" alt="Captured photo">
+                                        <button type="button" id="retake-photo" class="btn btn-secondary">
+                                            <i class="fas fa-redo"></i> Retake
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
