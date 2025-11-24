@@ -96,6 +96,23 @@ const categoriesGrid = document.querySelector('.categories-grid');
 const footerCategories = document.getElementById('footer-categories');
 const categorySelect = document.getElementById('recipe-category');
 
+// Image Upload Elements
+const uploadOptions = document.querySelectorAll('.upload-option');
+const imageInputs = document.querySelectorAll('.image-input');
+const recipeImageUpload = document.getElementById('recipe-image-upload');
+const uploadPreview = document.getElementById('upload-preview');
+const startCameraBtn = document.getElementById('start-camera');
+const cameraPreview = document.getElementById('camera-preview');
+const capturePhotoBtn = document.getElementById('capture-photo');
+const cameraCapture = document.getElementById('camera-capture');
+const capturedImage = document.getElementById('captured-image');
+const cameraPreviewResult = document.getElementById('camera-preview-result');
+const retakePhotoBtn = document.getElementById('retake-photo');
+
+// Camera variables
+let stream = null;
+let currentImageSource = null;
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
     displayRecipes();
@@ -103,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
     displayCategories();
     populateCategorySelect();
     setupEventListeners();
+    setupImageUpload();
 });
 
 // Display recipes on home page
@@ -241,6 +259,142 @@ function createPostItem(recipe, isPublished) {
     return postItem;
 }
 
+// Setup image upload functionality
+function setupImageUpload() {
+    // Upload option selection
+    uploadOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const optionType = this.getAttribute('data-option');
+            
+            // Update active option
+            uploadOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding input
+            imageInputs.forEach(input => input.classList.remove('active'));
+            document.querySelector(`.${optionType}-input`).classList.add('active');
+            
+            // Stop camera if switching away from camera
+            if (optionType !== 'camera' && stream) {
+                stopCamera();
+            }
+        });
+    });
+    
+    // File upload preview
+    recipeImageUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                uploadPreview.innerHTML = `<img src="${event.target.result}" alt="Uploaded image">`;
+                uploadPreview.classList.add('has-image');
+                currentImageSource = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Camera functionality
+    startCameraBtn.addEventListener('click', startCamera);
+    capturePhotoBtn.addEventListener('click', capturePhoto);
+    retakePhotoBtn.addEventListener('click', retakePhoto);
+}
+
+// Start camera
+function startCamera() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(mediaStream) {
+                stream = mediaStream;
+                cameraPreview.srcObject = stream;
+                startCameraBtn.style.display = 'none';
+                capturePhotoBtn.style.display = 'block';
+            })
+            .catch(function(error) {
+                console.error("Camera error: ", error);
+                alert("Unable to access camera. Please check permissions and try again.");
+            });
+    } else {
+        alert("Your browser doesn't support camera access.");
+    }
+}
+
+// Capture photo from camera
+function capturePhoto() {
+    const context = cameraCapture.getContext('2d');
+    cameraCapture.width = cameraPreview.videoWidth;
+    cameraCapture.height = cameraPreview.videoHeight;
+    context.drawImage(cameraPreview, 0, 0, cameraCapture.width, cameraCapture.height);
+    
+    const imageDataURL = cameraCapture.toDataURL('image/png');
+    capturedImage.src = imageDataURL;
+    currentImageSource = imageDataURL;
+    
+    cameraPreview.style.display = 'none';
+    capturePhotoBtn.style.display = 'none';
+    cameraPreviewResult.style.display = 'block';
+    
+    // Stop camera stream
+    stopCamera();
+}
+
+// Retake photo
+function retakePhoto() {
+    cameraPreviewResult.style.display = 'none';
+    cameraPreview.style.display = 'block';
+    startCamera();
+}
+
+// Stop camera
+function stopCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+    }
+}
+
+// Get current image source based on selected option
+function getCurrentImageSource() {
+    const activeOption = document.querySelector('.upload-option.active').getAttribute('data-option');
+    
+    switch(activeOption) {
+        case 'url':
+            return document.getElementById('recipe-image-url').value;
+        case 'upload':
+        case 'camera':
+            return currentImageSource;
+        default:
+            return '';
+    }
+}
+
+// Reset image upload form
+function resetImageForm() {
+    document.getElementById('recipe-image-url').value = '';
+    recipeImageUpload.value = '';
+    uploadPreview.innerHTML = '<i class="fas fa-image"></i><p>No image selected</p>';
+    uploadPreview.classList.remove('has-image');
+    
+    // Reset camera
+    cameraPreview.style.display = 'block';
+    capturePhotoBtn.style.display = 'none';
+    cameraPreviewResult.style.display = 'none';
+    startCameraBtn.style.display = 'block';
+    
+    // Stop camera if running
+    stopCamera();
+    
+    currentImageSource = null;
+    
+    // Reset to URL option
+    uploadOptions.forEach(opt => opt.classList.remove('active'));
+    document.querySelector('[data-option="url"]').classList.add('active');
+    
+    imageInputs.forEach(input => input.classList.remove('active'));
+    document.querySelector('.url-input').classList.add('active');
+}
+
 // Setup event listeners
 function setupEventListeners() {
     // Navigation
@@ -346,6 +500,11 @@ function switchTab(tabName) {
     
     // Close mobile menu if open
     document.getElementById('main-nav').classList.remove('active');
+    
+    // Reset image form when switching to create post
+    if (tabName === 'create-post') {
+        resetImageForm();
+    }
 }
 
 // Filter recipes by category
@@ -450,9 +609,15 @@ function publishRecipe() {
     const time = document.getElementById('recipe-time').value;
     const servings = document.getElementById('recipe-servings').value;
     const category = document.getElementById('recipe-category').value;
-    const image = document.getElementById('recipe-image').value;
+    const image = getCurrentImageSource();
     const ingredients = document.getElementById('recipe-ingredients').value;
     const instructions = document.getElementById('recipe-instructions').value;
+    
+    // Validate image
+    if (!image) {
+        alert('Please add an image for your recipe');
+        return;
+    }
     
     const newRecipe = {
         id: Date.now(),
@@ -469,6 +634,7 @@ function publishRecipe() {
     
     recipes.unshift(newRecipe);
     recipeForm.reset();
+    resetImageForm();
     
     alert('Recipe published successfully!');
     displayRecipes();
@@ -482,9 +648,15 @@ function saveAsDraft() {
     const time = document.getElementById('recipe-time').value;
     const servings = document.getElementById('recipe-servings').value;
     const category = document.getElementById('recipe-category').value;
-    const image = document.getElementById('recipe-image').value;
+    const image = getCurrentImageSource();
     const ingredients = document.getElementById('recipe-ingredients').value;
     const instructions = document.getElementById('recipe-instructions').value;
+    
+    // Validate image
+    if (!image) {
+        alert('Please add an image for your recipe');
+        return;
+    }
     
     const newDraft = {
         id: Date.now(),
@@ -500,6 +672,7 @@ function saveAsDraft() {
     
     drafts.unshift(newDraft);
     recipeForm.reset();
+    resetImageForm();
     
     alert('Draft saved successfully!');
     displayAdminPosts();
@@ -516,9 +689,25 @@ function editRecipe(id, isDraft) {
         document.getElementById('recipe-time').value = recipe.time;
         document.getElementById('recipe-servings').value = recipe.servings;
         document.getElementById('recipe-category').value = recipe.category;
-        document.getElementById('recipe-image').value = recipe.image;
         document.getElementById('recipe-ingredients').value = recipe.ingredients;
         document.getElementById('recipe-instructions').value = recipe.instructions;
+        
+        // Set image URL if it's not a data URL
+        if (recipe.image && !recipe.image.startsWith('data:')) {
+            document.getElementById('recipe-image-url').value = recipe.image;
+        } else if (recipe.image && recipe.image.startsWith('data:')) {
+            // For data URLs, we'll set it as the current image source
+            currentImageSource = recipe.image;
+            // Switch to upload option and show preview
+            uploadOptions.forEach(opt => opt.classList.remove('active'));
+            document.querySelector('[data-option="upload"]').classList.add('active');
+            
+            imageInputs.forEach(input => input.classList.remove('active'));
+            document.querySelector('.upload-input').classList.add('active');
+            
+            uploadPreview.innerHTML = `<img src="${recipe.image}" alt="Recipe image">`;
+            uploadPreview.classList.add('has-image');
+        }
         
         // Remove the recipe from its current list
         if (isDraft) {
