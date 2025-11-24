@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasty Recipes - Share Your Culinary Creations</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>Tasty Recipes</h1>
+            </div>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#" class="nav-link" data-target="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-target="categories">Categories</a></li>
+                    <li><a href="#" class="nav-link" data-target="create-post">Create Post</a></li>
+                    <li><a href="#" class="nav-link" data-target="admin">Manage Posts</a></li>
+                    <li><a href="#" class="nav-link" data-target="about">About</a></li>
+                </ul>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search recipes...">
+                </div>
+            </nav>
+            <div class="mobile-menu" id="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home" class="tab-content active">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h2>Delicious Recipes for Every Occasion</h2>
+                <p>Explore our collection of mouth-watering recipes from around the world. From quick weeknight dinners to elaborate holiday feasts, we've got you covered.</p>
+                <a href="#" class="btn nav-link" data-target="create-post">Share Your Recipe</a>
+            </div>
+        </section>
+
+        <!-- Featured Recipes -->
+        <section class="container">
+            <h2 class="section-title">Latest Recipes</h2>
+            <div class="recipes-grid" id="recipes-container">
+                <!-- Recipes will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Categories Preview Section -->
+        <section class="categories">
+            <div class="container">
+                <h2 class="section-title">Recipe Categories</h2>
+                <div class="categories-grid">
+                    <!-- Categories will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter">
+            <div class="container">
+                <h2>Subscribe to Our Newsletter</h2>
+                <p>Get the latest recipes and cooking tips delivered straight to your inbox every week.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </section>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="tab-content">
+        <div class="container">
+            <h2 class="section-title">All Categories</h2>
+            <div class="categories-full-grid" id="categories-full-container">
+                <!-- All categories will be dynamically added here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Create Post Section -->
+    <section id="create-post" class="tab-content">
+        <div class="container">
+            <div class="create-post">
+                <h2>Share Your Recipe</h2>
+                <form id="recipe-form">
+                    <div class="form-group">
+                        <label for="recipe-title">Recipe Title</label>
+                        <input type="text" id="recipe-title" class="form-control" placeholder="Enter recipe title" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipe-time">Cooking Time</label>
+                            <input type="text" id="recipe-time" class="form-control" placeholder="e.g. 30 minutes" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="recipe-servings">Servings</label>
+                            <input type="text" id="recipe-servings" class="form-control" placeholder="e.g. 4 people" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipe-category">Category</label>
+                        <select id="recipe-category" class="form-control" required>
+                            <option value="">Select a category</option>
+                            <!-- Categories will be dynamically added -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipe-image">Image URL</label>
+                        <input type="text" id="recipe-image" class="form-control" placeholder="Paste image URL here" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipe-ingredients">Ingredients</label>
+                        <textarea id="recipe-ingredients" class="form-control" placeholder="List ingredients (one per line)" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipe-instructions">Instructions</label>
+                        <textarea id="recipe-instructions" class="form-control" placeholder="Step-by-step instructions" required></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" id="save-draft" class="btn btn-secondary">Save Draft</button>
+                        <button type="submit" class="btn">Publish Recipe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel -->
+    <section id="admin" class="tab-content">
+        <div class="container">
+            <div class="admin-panel">
+                <h2>Manage Your Recipes</h2>
+                <div class="tabs">
+                    <div class="tab active" data-target="published">Published</div>
+                    <div class="tab" data-target="drafts">Drafts</div>
+                </div>
+
+                <div class="tab-content active" id="published">
+                    <div class="post-list" id="published-posts">
+                        <!-- Published posts will be added here -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="drafts">
+                    <div class="post-list" id="draft-posts">
+                        <!-- Draft posts will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="tab-content">
+        <div class="container">
+            <div class="about-section">
+                <div class="about-header">
+                    <h2>About Tasty Recipes</h2>
+                    <p>Your ultimate destination for delicious, tried-and-tested recipes from around the world</p>
+                </div>
+
+                <div class="about-content">
+                    <div class="about-story">
+                        <h3>Our Story</h3>
+                        <p>Founded in 2023, Tasty Recipes began as a passion project between two food enthusiasts who wanted to create a space where home cooks could share their culinary creations. What started as a small collection of family recipes has grown into a vibrant community of food lovers from all around the world.</p>
+                        <p>We believe that cooking should be enjoyable, accessible, and rewarding for everyone. Whether you're a seasoned chef or just starting your culinary journey, you'll find inspiration in our diverse collection of recipes.</p>
+                    </div>
+
+                    <div class="about-mission">
+                        <h3>Our Mission</h3>
+                        <p>Our mission is to inspire people to cook more often, try new ingredients, and share their food experiences with others. We're committed to:</p>
+                        <ul>
+                            <li>Providing high-quality, tested recipes</li>
+                            <li>Creating an inclusive community for food lovers</li>
+                            <li>Promoting sustainable cooking practices</li>
+                            <li>Making cooking accessible to all skill levels</li>
+                            <li>Celebrating diverse culinary traditions</li>
+                        </ul>
+                    </div>
+
+                    <div class="team-section">
+                        <h3>Meet Our Team</h3>
+                        <div class="team-grid">
+                            <div class="team-member">
+                                <div class="member-photo">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <h4>Sarah Johnson</h4>
+                                <p class="member-role">Head Chef & Founder</p>
+                                <p>With over 15 years of culinary experience, Sarah brings creativity and expertise to our recipe collection.</p>
+                            </div>
+
+                            <div class="team-member">
+                                <div class="member-photo">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <h4>Mike Chen</h4>
+                                <p class="member-role">Recipe Developer</p>
+                                <p>Mike specializes in Asian fusion cuisine and is passionate about making complex flavors accessible to home cooks.</p>
+                            </div>
+
+                            <div class="team-member">
+                                <div class="member-photo">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <h4>Elena Rodriguez</h4>
+                                <p class="member-role">Community Manager</p>
+                                <p>Elena connects with our community members and ensures everyone feels welcome to share their cooking experiences.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <h3>Get In Touch</h3>
+                        <div class="contact-grid">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <h4>Email Us</h4>
+                                    <p>hello@tastyrecipes.com</p>
+                                </div>
+                            </div>
+
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <h4>Call Us</h4>
+                                    <p>+1 (555) 123-4567</p>
+                                </div>
+                            </div>
+
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <h4>Visit Us</h4>
+                                    <p>123 Culinary Street, Food City, FC 12345</p>
+                                </div>
+                            </div>
+
+                            <div class="contact-item">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <h4>Office Hours</h4>
+                                    <p>Monday - Friday: 9 AM - 6 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Post Detail Section -->
+    <section id="blog-post" class="tab-content">
+        <div class="container">
+            <div class="back-btn" id="back-to-home">
+                <i class="fas fa-arrow-left"></i> Back to Recipes
+            </div>
+            <div class="blog-post" id="blog-post-content">
+                <!-- Blog post content will be dynamically added here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <!-- Column 1 -->
+                <div class="footer-column">
+                    <h3>Tasty Recipes</h3>
+                    <p>Your go-to destination for delicious, tried-and-tested recipes from around the world.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Column 2 -->
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="nav-link" data-target="home">Home</a></li>
+                        <li><a href="#" class="nav-link" data-target="categories">Categories</a></li>
+                        <li><a href="#" class="nav-link" data-target="create-post">Create Post</a></li>
+                        <li><a href="#" class="nav-link" data-target="about">About</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3 -->
+                <div class="footer-column">
+                    <h3>Popular Categories</h3>
+                    <ul class="footer-links" id="footer-categories">
+                        <!-- Categories will be dynamically added -->
+                    </ul>
+                </div>
+
+                <!-- Column 4 -->
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Food Street, Culinary City</li>
+                        <li><i class="fas fa-phone"></i> +1 234 567 8900</li>
+                        <li><i class="fas fa-envelope"></i> hello@tastyrecipes.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Tasty Recipes. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
